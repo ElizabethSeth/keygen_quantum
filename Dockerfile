@@ -1,20 +1,15 @@
-FROM python:3.10-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+FROM python:3.10
 
 WORKDIR /app
 
-# Install dependencies
 COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
 
-# Copy the source code
-COPY backend ./backend
-COPY saved_models ./saved_models
-COPY main.py .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port and run
-EXPOSE 8000
+COPY backend/main.py .
+
+COPY backend /app/backend
+COPY saved_models /app/saved_models
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
